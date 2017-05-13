@@ -54,13 +54,14 @@ def softmaxCostAndGradient(predicted, target, outputVectors, dataset):
     # assignment!                                                  
 
     ### YOUR CODE HERE
-    output = outputVectors.dot(predicted)
-    softmax_o = softmax(output)
-    cost = -np.log(softmax_o[target])
-    delta = softmax_o
+    probabilities = softmax(predicted.dot(outputVectors.T))
+    cost = -np.log(probabilities[target])
+    delta = probabilities
     delta[target] -= 1
-    gradPred = outputVectors.dot(delta)
-    grad = predicted.dot(delta)
+    gradPred = delta.dot(outputVectors).flatten()
+    N = delta.shape[0]
+    D = outputVectors.shape[1]
+    grad = delta.reshape((N, 1)).dot(predicted.reshape((1, D)))
     ### END YOUR CODE
 
     return cost, gradPred, grad
@@ -84,16 +85,28 @@ def negSamplingCostAndGradient(predicted, target, outputVectors, dataset,
     # assignment!
 
     ### YOUR CODE HERE
-    cost = - np.log(softmax(outputVectors[target].dot(predicted)))
-    for _ in range(K):
-        idx = dataset.sampleTokenIdx()
-        cost -= np.log(softmax(-outputVectors[idx].dot(predicted)))
+    grad = np.zeros(outputVectors.shape)
+    gradPred = np.zeros(predicted.shape)
 
-    sigma_ukvc = []
-    for _ in range(K):
-        idx = dataset.sampleTokenIdx()
-        sigma_ukvc.append(sigmoid(-outputVectors[idx].dot(predicted)))
+    indices = [target]
+    for k in xrange(K):
+        newidx = dataset.sampleTokenIdx()
+        while newidx == target:
+            newidx = dataset.sampleTokenIdx()
+        indices += [newidx]
 
+    labels = np.array([1] + [-1 for k in xrange(K)])
+    vecs = outputVectors[indices, :]
+
+    t = sigmoid(vecs.dot(predicted) * labels)
+    cost = -np.sum(np.log(t))
+
+    delta = labels * (t - 1)
+    gradPred = delta.reshape((1, K + 1)).dot(vecs).flatten()
+    gradtemp = delta.reshape((K + 1, 1)).dot(predicted.reshape(
+        (1, predicted.shape[0])))
+    for k in xrange(K + 1):
+        grad[indices[k]] += gradtemp[k, :]
     ### END YOUR CODE
 
     return cost, gradPred, grad
@@ -126,7 +139,17 @@ def skipgram(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
     # assignment!
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    target = tokens.get(currentWord)
+    predicted = inputVectors[target, :]
+    gradIn = np.zeros(inputVectors.shape)
+    gradOut = np.zeros(outputVectors.shape)
+    cost = 0.0
+    for wd in contextWords:
+        idx = tokens.get(wd)
+        co, gPred, gOut = word2vecCostAndGradient(predicted, idx, outputVectors, dataset)
+        cost += co
+        gradIn[target, :] += gPred
+        gradOut += gOut
     ### END YOUR CODE
 
     return cost, gradIn, gradOut
@@ -152,7 +175,17 @@ def cbow(currentWord, C, contextWords, tokens, inputVectors, outputVectors,
     gradOut = np.zeros(outputVectors.shape)
 
     ### YOUR CODE HERE
-    raise NotImplementedError
+    D = inputVectors.shape[1]
+    predicted = np.zeros((D,))
+    for wd in contextWords:
+        idx = tokens.get(wd)
+        predicted += inputVectors[idx, :]
+        predicted /= 2 * C
+    target = tokens.get(currentWord)
+    cost, gradPred, gradOut = word2vecCostAndGradient(predicted, target, outputVectors, dataset)
+    for wd in contextWords:
+        idx = tokens.get(wd)
+        gradIn[idx, :] += gradPred / (2 * C)
     ### END YOUR CODE
 
     return cost, gradIn, gradOut
