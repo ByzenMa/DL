@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import rnn
 
-
 def _print_success_message():
     print('Tests Passed')
 
@@ -240,7 +239,16 @@ def test_build_nn(build_nn):
         test_embed_dim = 300
         test_rnn_layer_size = 2
         test_vocab_size = 27
-        test_cell = rnn.MultiRNNCell([rnn.BasicLSTMCell(test_rnn_size)] * test_rnn_layer_size)
+
+        def build_cell(lstm_size):
+        # Use a basic LSTM cell
+            lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size)
+            return lstm
+
+        # Stack up multiple LSTM layers, for deep learning
+        test_cell = tf.contrib.rnn.MultiRNNCell([build_cell(test_rnn_size) for _ in range(test_rnn_layer_size)])
+
+        # test_cell = tf.nn.rnn_cell.MultiRNNCell([tf.nn.rnn_cell.BasicLSTMCell(test_rnn_size)] * test_rnn_layer_size)
 
         logits, final_state = build_nn(test_cell, test_rnn_size, test_input_data, test_vocab_size, test_embed_dim)
 
