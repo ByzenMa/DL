@@ -1,6 +1,10 @@
 import tensorflow as tf
 import numpy as np
 
+def get_tensor_by_name():
+    inputTensor = tf.Graph.get_tensor_by_name('')
+    np.array([1,3]).shape
+
 
 def get_batches(int_text, batch_size, seq_length):
     """
