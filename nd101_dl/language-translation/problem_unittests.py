@@ -1,3 +1,4 @@
+# encoding=utf-8
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.layers.core import Dense
@@ -86,7 +87,7 @@ def test_model_inputs(model_inputs):
             'Keep Probability is not a Placeholder.'
         assert target_sequence_length.op.type == 'Placeholder', \
             'Target Sequence Length is not a Placeholder.'
-        assert max_target_sequence_length.op.type == 'Max', \
+        assert max_target_sequence_length.op.type == 'Placeholder', \
             'Max Target Sequence Length is not a Placeholder.'
         assert source_sequence_length.op.type == 'Placeholder', \
             'Source Sequence Length is not a Placeholder.'

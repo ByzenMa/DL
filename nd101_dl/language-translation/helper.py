@@ -1,10 +1,10 @@
+# encoding=utf-8
 import os
 import pickle
 import copy
 import numpy as np
 
-
-CODES = {'<PAD>': 0, '<EOS>': 1, '<UNK>': 2, '<GO>': 3 }
+CODES = {'<PAD>': 0, '<EOS>': 1, '<UNK>': 2, '<GO>': 3}
 
 
 def load_data(path):
@@ -12,7 +12,7 @@ def load_data(path):
     Load Dataset from File
     """
     input_file = os.path.join(path)
-    with open(input_file, 'r', encoding='utf-8') as f:
+    with open(input_file, 'r') as f:
         return f.read()
 
 
@@ -83,7 +83,7 @@ def batch_data(source, target, batch_size):
     """
     Batch source and target together
     """
-    for batch_i in range(0, len(source)//batch_size):
+    for batch_i in range(0, len(source) // batch_size):
         start_i = batch_i * batch_size
         source_batch = source[start_i:start_i + batch_size]
         target_batch = target[start_i:start_i + batch_size]
