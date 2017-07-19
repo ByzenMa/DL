@@ -15,8 +15,7 @@ def model_inputs():
     lr_pl = tf.placeholder(tf.float32)
     keep_prob = tf.placeholder(tf.float32, name='keep_prob')
     target_sequence_length = tf.placeholder(tf.int32, shape=(None,), name='target_sequence_length')
-    max_target_len = tf.placeholder(tf.int32, name='max_target_len')
-    print max_target_len.get_shape()
+    max_target_len = tf.reduce_max(target_sequence_length, name='max_target_len')
     source_sequence_length = tf.placeholder(tf.int32, shape=(None,), name='source_sequence_length')
     return input_pl, targets_pl, lr_pl, keep_prob, target_sequence_length, max_target_len, source_sequence_length
 
