@@ -12,7 +12,8 @@
 # 
 # If you're using [FloydHub](https://www.floydhub.com/), set `data_dir` to "/input" and use the [FloydHub data ID](http://docs.floydhub.com/home/using_datasets/) "R5KrjnANiKVhLWAkpXhNBe".
 
-# In[ ]:
+# In[1]:
+
 
 # data_dir = './data'
 
@@ -35,12 +36,13 @@ helper.download_extract('celeba', data_dir)
 
 # In[2]:
 
+
 show_n_images = 25
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL
 """
-get_ipython().magic(u'matplotlib inline')
+get_ipython().magic('matplotlib inline')
 import os
 from glob import glob
 from matplotlib import pyplot
@@ -52,7 +54,8 @@ pyplot.imshow(helper.images_square_grid(mnist_images, 'L'), cmap='gray')
 # ### CelebA
 # The [CelebFaces Attributes Dataset (CelebA)](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) dataset contains over 200,000 celebrity images with annotations.  Since you're going to be generating faces, you won't need the annotations.  You can view the first number of examples by changing `show_n_images`.
 
-# In[3]:
+# In[4]:
+
 
 show_n_images = 25
 
@@ -79,7 +82,8 @@ pyplot.imshow(helper.images_square_grid(mnist_images, 'RGB'))
 # ### Check the Version of TensorFlow and Access to GPU
 # This will check to make sure you have the correct version of TensorFlow and access to a GPU
 
-# In[4]:
+# In[5]:
+
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL
@@ -107,7 +111,8 @@ else:
 # 
 # Return the placeholders in the following the tuple (tensor of real input images, tensor of z data)
 
-# In[5]:
+# In[6]:
+
 
 import problem_unittests as tests
 
@@ -135,7 +140,8 @@ tests.test_model_inputs(model_inputs)
 # ### Discriminator
 # Implement `discriminator` to create a discriminator neural network that discriminates on `images`.  This function should be able to reuse the variables in the neural network.  Use [`tf.variable_scope`](https://www.tensorflow.org/api_docs/python/tf/variable_scope) with a scope name of "discriminator" to allow the variables to be reused.  The function should return a tuple of (tensor output of the discriminator, tensor logits of the discriminator).
 
-# In[16]:
+# In[7]:
+
 
 def discriminator(images, reuse=False):
     """
@@ -173,7 +179,8 @@ tests.test_discriminator(discriminator, tf)
 # ### Generator
 # Implement `generator` to generate an image using `z`. This function should be able to reuse the variables in the neural network.  Use [`tf.variable_scope`](https://www.tensorflow.org/api_docs/python/tf/variable_scope) with a scope name of "generator" to allow the variables to be reused. The function should return the generated 28 x 28 x `out_channel_dim` images.
 
-# In[17]:
+# In[8]:
+
 
 def generator(z, out_channel_dim, is_train=True):
     alpha = 0.01
@@ -221,7 +228,8 @@ tests.test_generator(generator, tf)
 # - `discriminator(images, reuse=False)`
 # - `generator(z, out_channel_dim, is_train=True)`
 
-# In[18]:
+# In[9]:
+
 
 def model_loss(input_real, input_z, out_channel_dim):
     """
@@ -257,7 +265,8 @@ tests.test_model_loss(model_loss)
 # ### Optimization
 # Implement `model_opt` to create the optimization operations for the GANs. Use [`tf.trainable_variables`](https://www.tensorflow.org/api_docs/python/tf/trainable_variables) to get all the trainable variables.  Filter the variables with names that are in the discriminator and generator scope names.  The function should return a tuple of (discriminator training operation, generator training operation).
 
-# In[19]:
+# In[10]:
+
 
 def model_opt(d_loss, g_loss, learning_rate, beta1):
     """
@@ -291,7 +300,8 @@ tests.test_model_opt(model_opt, tf)
 # ### Show Output
 # Use this function to show the current output of the generator during training. It will help you determine how well the GANs is training.
 
-# In[20]:
+# In[11]:
+
 
 """
 DON'T MODIFY ANYTHING IN THIS CELL
@@ -328,7 +338,8 @@ def show_generator_output(sess, n_images, input_z, out_channel_dim, image_mode):
 # 
 # Use the `show_generator_output` to show `generator` output while you train. Running `show_generator_output` for every batch will drastically increase training time and increase the size of the notebook.  It's recommended to print the `generator` output every 100 batches.
 
-# In[21]:
+# In[12]:
+
 
 def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, data_shape, data_image_mode):
     """
@@ -355,6 +366,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
         sess.run(tf.global_variables_initializer())
         for epoch_i in range(epoch_count):
             for batch_images in get_batches(batch_size):
+                batch_images = 2 * batch_images
                 steps += 1
                 # Sample random noise for G
                 batch_z = np.random.uniform(-1, 1, size=(batch_size, z_dim))
@@ -379,9 +391,10 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
 # ### MNIST
 # Test your GANs architecture on MNIST.  After 2 epochs, the GANs should be able to generate images that look like handwritten digits.  Make sure the loss of the generator is lower than the loss of the discriminator or close to 0.
 
-# In[22]:
+# In[ ]:
 
-batch_size = 128
+
+batch_size = 32
 z_dim = 100
 learning_rate = 0.0002
 beta1 = 0.5
@@ -403,7 +416,8 @@ with tf.Graph().as_default():
 
 # In[ ]:
 
-batch_size = 64
+
+batch_size = 32
 z_dim = 100
 learning_rate = 0.0001
 beta1 = 0.5
@@ -424,6 +438,7 @@ with tf.Graph().as_default():
 # When submitting this project, make sure to run all the cells before saving the notebook. Save the notebook file as "dlnd_face_generation.ipynb" and save it as a HTML file under "File" -> "Download as". Include the "helper.py" and "problem_unittests.py" files in your submission.
 
 # In[ ]:
+
 
 
 
