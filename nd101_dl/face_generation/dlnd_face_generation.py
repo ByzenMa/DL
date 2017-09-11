@@ -12,7 +12,7 @@
 # 
 # If you're using [FloydHub](https://www.floydhub.com/), set `data_dir` to "/input" and use the [FloydHub data ID](http://docs.floydhub.com/home/using_datasets/) "R5KrjnANiKVhLWAkpXhNBe".
 
-# In[1]:
+# In[2]:
 
 
 # data_dir = './data'
@@ -34,7 +34,7 @@ helper.download_extract('celeba', data_dir)
 # ### MNIST
 # As you're aware, the [MNIST](http://yann.lecun.com/exdb/mnist/) dataset contains images of handwritten digits. You can view the first number of examples by changing `show_n_images`. 
 
-# In[2]:
+# In[3]:
 
 
 show_n_images = 25
@@ -391,7 +391,7 @@ def train(epoch_count, batch_size, z_dim, learning_rate, beta1, get_batches, dat
 # ### MNIST
 # Test your GANs architecture on MNIST.  After 2 epochs, the GANs should be able to generate images that look like handwritten digits.  Make sure the loss of the generator is lower than the loss of the discriminator or close to 0.
 
-# In[ ]:
+# In[13]:
 
 
 batch_size = 32
@@ -414,12 +414,12 @@ with tf.Graph().as_default():
 # ### CelebA
 # Run your GANs on CelebA.  It will take around 20 minutes on the average GPU to run one epoch.  You can run the whole epoch or stop when it starts to generate realistic faces.
 
-# In[ ]:
+# In[14]:
 
 
-batch_size = 32
+batch_size = 16
 z_dim = 100
-learning_rate = 0.0001
+learning_rate = 0.0002
 beta1 = 0.5
 
 
